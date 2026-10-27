@@ -1,0 +1,73 @@
+{
+  "dataset": "UCI #697 - Predict Students' Dropout and Academic Success",
+  "feature_columns": [
+    "Marital status",
+    "Application mode",
+    "Application order",
+    "Course",
+    "Daytime/evening attendance",
+    "Previous qualification",
+    "Previous qualification (grade)",
+    "Nacionality",
+    "Mother's qualification",
+    "Father's qualification",
+    "Mother's occupation",
+    "Father's occupation",
+    "Admission grade",
+    "Displaced",
+    "Educational special needs",
+    "Debtor",
+    "Tuition fees up to date",
+    "Gender",
+    "Scholarship holder",
+    "Age at enrollment",
+    "International",
+    "Curricular units 1st sem (credited)",
+    "Curricular units 1st sem (enrolled)",
+    "Curricular units 1st sem (evaluations)",
+    "Curricular units 1st sem (approved)",
+    "Curricular units 1st sem (grade)",
+    "Curricular units 1st sem (without evaluations)",
+    "Curricular units 2nd sem (credited)",
+    "Curricular units 2nd sem (enrolled)",
+    "Curricular units 2nd sem (evaluations)",
+    "Curricular units 2nd sem (approved)",
+    "Curricular units 2nd sem (grade)",
+    "Curricular units 2nd sem (without evaluations)",
+    "Unemployment rate",
+    "Inflation rate",
+    "GDP"
+  ],
+  "target_column": "Target",
+  "class_labels": [
+    "Dropout",
+    "Enrolled",
+    "Graduate"
+  ],
+  "train_rows": 3539,
+  "test_rows": 885,
+  "random_state": 42,
+  "best_params": {
+    "Logistic Regression": {
+      "C": 1.0,
+      "class_weight": null
+    },
+    "Decision Tree": {
+      "criterion": "entropy",
+      "max_depth": 6,
+      "min_samples_leaf": 20
+    },
+    "KNN": {
+      "n_neighbors": 11,
+      "p": 1,
+      "weights": "uniform"
+    },
+    "Naive Bayes": {
+      "var_smoothing": 0.1
+    },
+    "Support Vector Machine": {
+      "C": 5.0,
+      "gamma": 0.01
+    }
+  }
+}
