@@ -36,6 +36,16 @@ METRIC_HELP = {
     "MCC": "Matthews correlation coefficient: -1 (inverse) to 1 (perfect), 0 = chance.",
 }
 
+# `python app.py` has no Streamlit runtime (only "missing ScriptRunContext" warnings);
+# hand off to `streamlit run` so both launch styles open the app.
+if __name__ == "__main__" and not st.runtime.exists():
+    import sys
+
+    from streamlit.web import cli as stcli
+
+    sys.argv = ["streamlit", "run", __file__, *sys.argv[1:]]
+    sys.exit(stcli.main())
+
 st.set_page_config(page_title="Student Outcome Classifier Lab", page_icon="🎓", layout="wide")
 
 

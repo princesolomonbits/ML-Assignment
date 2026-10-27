@@ -172,5 +172,6 @@ streamlit run app.py
 ```
 
 The saved models were serialised with scikit-learn 1.7.2. `requirements.txt` pins this
-version so the `.joblib` files load identically on Streamlit Community Cloud. Use Python
-3.11–3.13 when deploying.
+version so the `.joblib` files load identically on Streamlit Community Cloud. Every pinned
+package installs from pre-built wheels on Python 3.11–3.14 (Windows and Linux), so no
+compiler or CMake is needed. `pyarrow` is pinned explicitly for this reason.
