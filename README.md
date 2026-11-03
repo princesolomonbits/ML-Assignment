@@ -3,8 +3,8 @@
 Predicting student dropout and academic success with five classical ML classifiers, served
 through an interactive Streamlit app.
 
-- **GitHub repository:** `<add GitHub repository URL>`
-- **Live Streamlit app:** `<add Streamlit Community Cloud URL>`
+- **GitHub repository:** `https://github.com/princesolomonbits/ML-Assignment`
+- **Live Streamlit app:** `https://ml-assignment-prince.streamlit.app/`
 
 ---
 
