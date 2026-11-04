@@ -3,8 +3,8 @@
 Predicting student dropout and academic success with five classical ML classifiers, served
 through an interactive Streamlit app.
 
-- **GitHub repository:** `https://github.com/princesolomonbits/ML-Assignment`
-- **Live Streamlit app:** `https://ml-assignment-prince.streamlit.app/`
+- **GitHub repository:** https://github.com/princesolomonbits/ML-Assignment
+- **Live Streamlit app:** https://ml-assignment-prince.streamlit.app/
 
 ---
 
@@ -64,9 +64,26 @@ imbalance towards one class.
 - Each model's hyper-parameters were chosen by 5-fold stratified grid search on the training
   split, scored on weighted F1.
 
+**Class proportions in the training and test data**
+
+The split is stratified on `Target` (`train_test_split(..., stratify=y)` in
+`train_models.py`), so both sets keep the class mix of the full dataset. The largest gap
+between any set and the full data is 0.04 percentage points.
+
+![Target class proportions in the full, training and test data](docs/class_distribution.png)
+
+| Class | Full dataset (4,424) | Training set (3,539) | Test set (885) |
+|---|---|---|---|
+| Dropout | 1,421 (32.12%) | 1,137 (32.13%) | 284 (32.09%) |
+| Enrolled | 794 (17.95%) | 635 (17.94%) | 159 (17.97%) |
+| Graduate | 2,209 (49.93%) | 1,767 (49.93%) | 442 (49.94%) |
+
+Counts reproduced from `data/students_dropout_academic_success.csv` with the same split
+settings (`test_size=0.20`, `random_state=42`); the test counts match `test_data.csv`.
+
 ## c. GitHub repository link
 
-`<add GitHub repository URL>`
+https://github.com/princesolomonbits/ML-Assignment
 
 ```
 ML-Assignment/
@@ -86,6 +103,8 @@ ML-Assignment/
 │   ├── svm.joblib
 │   ├── model_metadata.json    # feature order, class labels, tuned hyper-parameters
 │   └── metrics_holdout.json   # metrics of every model on test_data.csv
+├── docs/
+│   └── class_distribution.png # class proportions: full vs. train vs. test
 └── .streamlit/config.toml     # app theme
 ```
 
@@ -94,6 +113,37 @@ ML-Assignment/
 All five models are trained on the same data and evaluated on the same 885-row hold-out set
 (`test_data.csv`). Because the task has three classes, Precision, Recall, F1 and AUC
 (one-vs-rest) are **support-weighted averages**. MCC uses its multi-class form.
+
+> **Note on Logistic Regression probabilities (softmax).** Logistic Regression uses the
+> multinomial (softmax) formulation via scikit-learn's default `lbfgs` solver, not
+> One-vs-Rest. A single model with one weight vector per class (3 × 132 coefficients) is
+> fitted jointly under a cross-entropy loss. Each class score is
+> z<sub>k</sub> = w<sub>k</sub>·x + b<sub>k</sub>, and the probability is
+> P(class k | x) = exp(z<sub>k</sub>) / Σ<sub>j</sub> exp(z<sub>j</sub>). The three
+> probabilities therefore always sum to 1. One-vs-Rest is used only for the **AUC metric**:
+> the softmax probabilities of each class are scored against the rest, then
+> support-weighted.
+
+> **Note on SVM probabilities (One-vs-One + Platt scaling).** The SVM is inherently binary,
+> so scikit-learn (libsvm) trains it **One-vs-One**: 3 binary RBF SVMs, one per class pair
+> (Dropout–Enrolled, Dropout–Graduate, Enrolled–Graduate). `predict()` takes a majority
+> vote of the three. Probabilities are not produced by the SVM itself: with
+> `probability=True`, a sigmoid is fitted to each pair's decision scores using internal
+> 5-fold cross-validation (**Platt scaling**), and the three pairwise probabilities are
+> combined into one distribution that sums to 1 (**pairwise coupling**). Because the
+> predicted label comes from the vote and the probabilities from the coupled sigmoids, they
+> can disagree on borderline rows (20 of the 885 test rows). Accuracy, Precision, Recall, F1 and MCC use
+> `predict()`, and AUC uses `predict_proba()`. The `decision_function_shape="ovr"` setting
+> only reshapes the output scores; training is still One-vs-One.
+
+**How the other models produce probabilities.** All three handle the three classes
+natively, in a single model:
+
+| Model | Probability of each class |
+|---|---|
+| Decision Tree | Class proportions of the training samples in the leaf the row falls into |
+| KNN | Share of the 11 nearest neighbours in each class (uniform weights, e.g. 7 of 11 Graduate → 0.64) |
+| Gaussian Naive Bayes | Bayes' rule: class prior × product of per-feature Gaussian likelihoods, normalised over the 3 classes |
 
 ### Comparison table
 
